@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>YoooFind 后台管理</title>
+    <link href="assets/boxicons-2.1.4/css/boxicons.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="admin.css" />
+  </head>
+  <body>
+    <div class="admin-layout">
+      <aside class="admin-sidebar">
+        <div class="admin-brand">
+          <img src="assets/YoooFind.png" alt="logo" />
+          <div>
+            <h1>后台管理</h1>
+            <p id="adminIdentity">管理员校验中...</p>
+          </div>
+        </div>
+        <nav class="admin-nav" id="adminNav">
+          <button type="button" class="admin-nav__item is-active" data-tab="users">
+            <i class="bx bx-user"></i>
+            用户管理
+          </button>
+          <button type="button" class="admin-nav__item" data-tab="visits">
+            <i class="bx bx-line-chart"></i>
+            访问统计
+          </button>
+          <button type="button" class="admin-nav__item" data-tab="tokens">
+            <i class="bx bx-coin-stack"></i>
+            Token使用总量
+          </button>
+          <button type="button" class="admin-nav__item" data-tab="feedback">
+            <i class="bx bx-message-square-dots"></i>
+            用户反馈
+          </button>
+        </nav>
+        <div class="admin-sidebar__actions">
+          <button type="button" class="ghost-btn" id="backToChatBtn">返回聊天</button>
+        </div>
+      </aside>
+
+      <main class="admin-main">
+        <header class="admin-header">
+          <h2 id="tabTitle">用户管理</h2>
+          <button type="button" class="ghost-btn" id="refreshBtn">刷新数据</button>
+        </header>
+
+        <section class="admin-tab is-active" data-tab-content="users">
+          <div class="panel-grid panel-grid--users">
+            <article class="panel">
+              <h3>注册用户列表</h3>
+              <p class="panel-tip">点击用户条可查看详情、修改每日Token上限、重置密码、查看对话记录（最近30次会话）。</p>
+              <div id="usersList" class="list"></div>
+            </article>
+            <article class="panel">
+              <h3>用户详情</h3>
+              <div id="userDetail" class="detail-placeholder">请选择左侧用户</div>
+            </article>
+          </div>
+        </section>
+
+        <section class="admin-tab" data-tab-content="visits">
+          <div class="stats-row" id="visitCards"></div>
+          <article class="panel">
+            <h3>最近30天访问趋势</h3>
+            <div class="chart-frame">
+              <canvas id="visitTrendChart"></canvas>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>日期</th>
+                    <th>访问人数</th>
+                  </tr>
+                </thead>
+                <tbody id="visitTrendTable"></tbody>
+              </table>
+            </div>
+          </article>
+        </section>
+
+        <section class="admin-tab" data-tab-content="tokens">
+          <div class="stats-row" id="tokenCards"></div>
+          <div class="panel-grid">
+            <article class="panel">
+              <h3 id="tokenFocusTitle">全站Token分布</h3>
+              <div class="chart-frame chart-frame--compact">
+                <canvas id="tokenFocusChart"></canvas>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>用户</th>
+                      <th id="tokenFocusValueHeader">今日总量</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tokenFocusTable"></tbody>
+                </table>
+              </div>
+            </article>
+            <article class="panel">
+              <h3>每个用户Token使用（点击查看详情）</h3>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>用户</th>
+                      <th>今日总量</th>
+                      <th>历史总量</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tokenUsersTable"></tbody>
+                </table>
+              </div>
+              <div class="detail-block">
+                <strong>用户Token详情</strong>
+                <div class="chart-frame chart-frame--compact">
+                  <canvas id="tokenUserChart"></canvas>
+                </div>
+                <div id="tokenUserDetail" class="detail-placeholder">点击上方用户查看明细</div>
+              </div>
+            </article>
+            <article class="panel">
+              <h3>全站每日Token总量（最近30天）</h3>
+              <div class="chart-frame">
+                <canvas id="tokenDailyChart"></canvas>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>日期</th>
+                      <th>Prompt</th>
+                      <th>Completion</th>
+                      <th>Total</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tokenDailyTable"></tbody>
+                </table>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="admin-tab" data-tab-content="feedback">
+          <div class="stats-row" id="feedbackCards"></div>
+          <div class="panel-grid panel-grid--feedback">
+            <article class="panel">
+              <h3>反馈列表</h3>
+              <p class="panel-tip">点击反馈条目可查看详情，并标记为已读。</p>
+              <div id="feedbackList" class="list"></div>
+            </article>
+            <article class="panel">
+              <h3>反馈详情</h3>
+              <div id="feedbackDetail" class="detail-placeholder">请选择左侧反馈</div>
+            </article>
+          </div>
+        </section>
+        <div class="page-status" id="adminStatus"></div>
+      </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+    <script type="module" src="admin.js"></script>
+  </body>
+</html>

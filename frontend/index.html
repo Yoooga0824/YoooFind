@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta
+      name="description"
+      content="Explore the power of advanced AI with our Gemini clone! ✨ Get cutting-edge features and seamless interaction. Try it now! 🤖"
+    />
+    <meta
+      name="keywords"
+      content="Gemini clone, AI, artificial intelligence, chatbot, NLP, machine learning, innovative, technology, assistant, chat"
+    />
+    <meta name="author" content="Gouranga Das Samrat" />
+    <meta name="robots" content="index, follow" />
+    <meta name="language" content="en" />
+
+    <meta property="og:title" content="Your Gemini Clone Title Here 🚀" />
+    <meta
+      property="og:description"
+      content="Explore the power of advanced AI with our Gemini clone! ✨ Get cutting-edge features and seamless interaction. Try it now! 🤖"
+    />
+    <meta
+      property="og:image"
+      content="URL_TO_YOUR_WEBSITE_LOGO_OR_A_REPRESENTATIVE_SCREENSHOT"
+    />
+    <meta
+      property="og:url"
+      content="https://geminiclonebygouranga.netlify.app/"
+    />
+    <meta property="og:type" content="website" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Your Gemini Clone Title Here 🚀" />
+    <meta
+      name="twitter:description"
+      content="Explore the power of advanced AI with our Gemini clone! ✨ Get cutting-edge features and seamless interaction. Try it now! 🤖"
+    />
+    <meta
+      name="twitter:image"
+      content="URL_TO_YOUR_WEBSITE_LOGO_OR_A_REPRESENTATIVE_SCREENSHOT"
+    />
+    <meta
+      name="twitter:url"
+      content="https://geminiclonebygouranga.netlify.app/"
+    />
+    <meta name="google-adsense-account" content="ca-pub-8784624020948059" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      if (localStorage.getItem("themeColor") === "light_mode") {
+        document.documentElement.classList.add("light_mode");
+      }
+    </script>
+    <link rel="stylesheet" href="assets/highlight-js/styles/github-dark.css" />
+    <link href="assets/boxicons-2.1.4/css/boxicons.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="shortcut icon" href="assets/YoooFind.png" type="image/x-icon" />
+    <script src="assets/highlight-js/highlight.min.js"></script>
+    <script src="assets/marked/marked.min.js"></script>
+    <title>YoooFind</title>
+  </head>
+
+  <body class="sidebar-collapsed">
+    <aside class="app-sidebar" id="appSidebar" aria-label="侧边栏">
+      <div class="app-sidebar__top">
+        <div class="sidebar__brand" id="sidebarBrand">
+          <img class="sidebar__brand-logo" src="assets/YoooFind.png" alt="YoooFind logo" />
+          <span class="sidebar__brand-title sidebar__label">YoooFind</span>
+          <button
+            type="button"
+            class="sidebar__collapse-btn"
+            id="sidebarCollapseButton"
+            title="折叠侧边栏"
+            aria-label="折叠侧边栏"
+          >
+            <i class="bx bx-chevrons-left"></i>
+          </button>
+          <button
+            type="button"
+            class="sidebar__expand-btn"
+            id="sidebarExpandButton"
+            title="展开侧边栏"
+            aria-label="展开侧边栏"
+          >
+            <i class="bx bx-chevrons-right"></i>
+          </button>
+        </div>
+        <button type="button" class="sidebar__new-chat-btn" id="newChatButton">
+          <i class="bx bx-edit-alt"></i>
+          <span class="sidebar__label">新建对话</span>
+        </button>
+      </div>
+
+      <div class="app-sidebar__middle">
+        <div class="sidebar__section-title sidebar__label">历史会话（仅保存最近30条记录）</div>
+        <div class="sidebar__history" id="sidebarHistory">
+          <button type="button" class="sidebar__session is-active" data-session-id="session-1">
+            <i class="bx bx-message-rounded-dots sidebar__session-icon"></i>
+            <span class="sidebar__session-title">新聊天</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="app-sidebar__bottom">
+        <button type="button" class="sidebar__user-card" id="sidebarUserCard">
+          <img class="sidebar__user-avatar" id="sidebarUserAvatar" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" alt="用户头像" />
+          <span class="sidebar__label" id="sidebarUserLabel">登录</span>
+        </button>
+        <button type="button" class="sidebar__settings-btn" id="sidebarSettingsButton">
+          <i class="bx bx-cog"></i>
+          <span class="sidebar__label">设置</span>
+        </button>
+      </div>
+    </aside>
+    <button type="button" class="sidebar__backdrop" id="sidebarBackdrop" aria-label="关闭侧边栏"></button>
+    <script>
+      (function preloadSidebarProfile() {
+        const defaultAvatar = "assets/profile.png";
+        let avatar = defaultAvatar;
+        let label = "登录";
+        try {
+          const token = localStorage.getItem("authToken");
+          const raw = localStorage.getItem("cachedUserProfile");
+          const cached = raw ? JSON.parse(raw) : null;
+          if (token && cached && typeof cached === "object") {
+            avatar = String(cached.avatar_url || "").trim() || defaultAvatar;
+            label = String(cached.display_name || "").trim() || "用户";
+          }
+        } catch {
+          avatar = defaultAvatar;
+          label = "登录";
+        }
+        const avatarEl = document.getElementById("sidebarUserAvatar");
+        if (avatarEl) avatarEl.src = avatar;
+        const labelEl = document.getElementById("sidebarUserLabel");
+        if (labelEl) labelEl.textContent = label;
+      })();
+    </script>
+
+    <nav class="navbar">
+      <div class="navbar__left">
+        <button class="navbar__button navbar__button--menu" id="sidebarMobileToggle" type="button">
+          <i class="bx bx-menu"></i>
+        </button>
+        <div class="model-picker" id="modelPicker">
+          <button
+            class="model-picker__trigger"
+            id="modelPickerTrigger"
+            type="button"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            <span class="model-picker__title" id="modelPickerSummary">DeepSeek</span>
+            <i class="bx bx-chevron-down"></i>
+          </button>
+          <div class="model-picker__panel hide" id="modelPickerPanel">
+            <div class="model-picker__panel-head">
+              <span>选择多模型</span>
+            </div>
+            <div id="modelPickerOptions"></div>
+          </div>
+        </div>
+        <button
+          type="button"
+          class="deep-search-toggle"
+          id="deepSearchToggle"
+          aria-pressed="false"
+          title="开启联网搜索"
+        >
+          <i class="bx bx-globe"></i>
+          <span>联网搜索</span>
+        </button>
+      </div>
+      <div class="navbar__right">
+        <button class="navbar__button" id="themeToggler">
+          <i class="bx bx-sun"></i>
+        </button>
+      </div>
+    </nav>
+
+    <header class="header">
+      <div class="header__title">
+        <h1 class="header__typing-title" data-full-text="你好！我是YoooFind">
+          <span class="header__typing-text">你好！我是YoooFind</span><span class="header__cursor" aria-hidden="true">▌</span>
+        </h1>
+      </div>
+    </header>
+
+    <section class="chats"></section>
+
+    <section class="prompt">
+      <form action="#" class="prompt__form" novalidate>
+        <div class="prompt__input-wrapper">
+          <button
+            class="prompt__form-button prompt__form-button--attach"
+            id="attachButton"
+            type="button"
+            aria-label="上传文件"
+            title="上传文件和图片"
+          >
+            <i class="bx bx-plus"></i>
+          </button>
+          <div class="prompt__attach-menu hide" id="attachMenu">
+            <button
+              type="button"
+              class="prompt__attach-option"
+              data-attach-mode="image"
+            >
+              <i class="bx bx-image-add"></i>
+              上传图片
+            </button>
+            <button
+              type="button"
+              class="prompt__attach-option"
+              data-attach-mode="file"
+            >
+              <i class="bx bx-file"></i>
+              上传文件
+            </button>
+          </div>
+          <input
+            id="fileInput"
+            class="prompt__file-input"
+            type="file"
+            multiple
+            accept="image/*,.txt,.md,.json,.csv,.js,.ts,.tsx,.go,.py,.java,.c,.cpp,.html,.css,.xml,.yaml,.yml,.pdf"
+          />
+          <textarea
+            placeholder="好久不见..."
+            class="prompt__form-input"
+            rows="1"
+            required
+          ></textarea>
+          <button class="prompt__form-button" id="sendButton">
+            <i class="bx bx-send"></i>
+          </button>
+          <button
+            class="prompt__form-button"
+            id="voiceButton"
+            type="button"
+            aria-label="语音输入"
+            title="语音输入"
+          >
+            <i class="bx bx-microphone"></i>
+          </button>
+          <div class="prompt__attachments" id="attachmentList"></div>
+        </div>
+      </form>
+    </section>
+
+    <div class="modal-overlay hide" id="authModal" aria-hidden="true">
+      <div class="modal-card" role="dialog" aria-modal="true" aria-label="登录或注册">
+        <button type="button" class="modal-close-btn" data-close-modal="authModal" aria-label="关闭">
+          <i class="bx bx-x"></i>
+        </button>
+        <h2 class="modal-title">欢迎来到 YoooFind</h2>
+        <p class="modal-subtitle">登录后可同步历史会话与个人配置</p>
+        <div class="modal-tab-row">
+          <button type="button" class="modal-tab-btn is-active" data-auth-mode="login">登录</button>
+          <button type="button" class="modal-tab-btn" data-auth-mode="register">注册</button>
+        </div>
+        <form class="modal-form" id="authForm">
+          <label class="modal-field">
+            <span>邮箱</span>
+            <input id="authEmail" type="email" required placeholder="you@example.com" />
+          </label>
+          <label class="modal-field">
+            <span>密码</span>
+            <input id="authPassword" type="password" required minlength="6" placeholder="至少 6 位" />
+          </label>
+          <button type="submit" class="modal-primary-btn" id="authSubmitButton">登录</button>
+        </form>
+        <div class="modal-status" id="authStatus"></div>
+      </div>
+    </div>
+
+    <div class="modal-overlay hide" id="profileModal" aria-hidden="true">
+      <div class="modal-card modal-card--wide" role="dialog" aria-modal="true" aria-label="个人信息">
+        <button type="button" class="modal-close-btn" data-close-modal="profileModal" aria-label="关闭">
+          <i class="bx bx-x"></i>
+        </button>
+        <h2 class="modal-title">个人信息</h2>
+        <div class="profile-head">
+          <img class="profile-avatar-preview" id="profileAvatarPreview" src="assets/profile.png" alt="头像预览" />
+          <label class="modal-secondary-btn profile-upload-btn">
+            上传头像
+            <input id="avatarInput" type="file" accept="image/*" />
+          </label>
+        </div>
+        <form class="modal-form" id="profileForm">
+          <label class="modal-field">
+            <span>昵称</span>
+            <input id="profileDisplayName" type="text" maxlength="32" placeholder="用户" />
+          </label>
+          <label class="modal-field">
+            <span>姓名</span>
+            <input id="profileFullName" type="text" maxlength="64" placeholder="你的姓名" />
+          </label>
+          <label class="modal-field">
+            <span>个人简述</span>
+            <textarea id="profileBio" rows="3" maxlength="300" placeholder="介绍一下自己"></textarea>
+          </label>
+        </form>
+        <section class="profile-usage-card" aria-label="Token 使用统计">
+          <h3 class="modal-title profile-usage-title">Token 使用统计</h3>
+          <div class="usage-summary" id="usageSummaryText">近30天 0 token · 历史总计 0 token</div>
+          <div class="usage-toggle-group" id="usageToggleGroup">
+            <button type="button" class="usage-toggle-btn is-active" data-usage-mode="recent30">近30天 Token</button>
+            <button type="button" class="usage-toggle-btn" data-usage-mode="alltime">历史累计 Token</button>
+          </div>
+          <div class="usage-chart-frame">
+            <canvas id="usageChartCanvas" width="560" height="380"></canvas>
+          </div>
+        </section>
+        <div class="profile-action-row">
+          <button type="submit" form="profileForm" class="modal-primary-btn">保存资料</button>
+          <button type="button" class="modal-secondary-btn hide" id="adminEntryButton">后台管理</button>
+          <button type="button" class="modal-secondary-btn" id="logoutButton">退出登录</button>
+        </div>
+        <div class="modal-status" id="profileStatus"></div>
+      </div>
+    </div>
+
+    <div class="modal-overlay hide" id="settingsModal" aria-hidden="true">
+      <div class="modal-card modal-card--settings" role="dialog" aria-modal="true" aria-label="设置">
+        <button type="button" class="modal-close-btn" data-close-modal="settingsModal" aria-label="关闭">
+          <i class="bx bx-x"></i>
+        </button>
+        <div class="settings-modal">
+          <aside class="settings-modal__nav">
+            <h2 class="settings-modal__title">设置</h2>
+            <nav class="settings-modal__nav-list" id="settingsNav">
+              <button type="button" class="settings-nav-btn is-active" data-settings-tab="sponsor">
+                <i class="bx bx-heart"></i>
+                <span>赞助</span>
+              </button>
+              <button type="button" class="settings-nav-btn" data-settings-tab="feedback">
+                <i class="bx bx-message-square-dots"></i>
+                <span>反馈</span>
+              </button>
+            </nav>
+          </aside>
+          <div class="settings-modal__content">
+            <section class="settings-panel is-active" data-settings-panel="sponsor" aria-label="赞助">
+              <div class="settings-panel__head">
+                <h3 class="settings-panel__title">赞助</h3>
+                <p class="settings-panel__subtitle">感谢您对 YoooFind 的支持</p>
+              </div>
+              <div class="settings-markdown" id="sponsorMarkdownContent">
+                <div class="settings-markdown__loading">加载中...</div>
+              </div>
+            </section>
+            <section class="settings-panel" data-settings-panel="feedback" aria-label="反馈">
+              <div class="settings-panel__head">
+                <h3 class="settings-panel__title">反馈</h3>
+                <p class="settings-panel__subtitle">遇到问题或有建议？告诉我们</p>
+              </div>
+              <form class="modal-form settings-feedback-form" id="feedbackForm">
+                <label class="modal-field">
+                  <span>标题</span>
+                  <input id="feedbackTitle" type="text" maxlength="200" required placeholder="简要描述你的反馈" />
+                </label>
+                <label class="modal-field">
+                  <span>内容</span>
+                  <textarea id="feedbackContent" rows="9" maxlength="5000" required placeholder="请详细描述问题或建议"></textarea>
+                </label>
+                <button type="submit" class="modal-primary-btn settings-feedback-submit" id="feedbackSubmitButton">
+                  提交反馈
+                </button>
+              </form>
+              <div class="modal-status" id="feedbackStatus"></div>
+            </section>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- <p class="prompt__disclaim">
+      YoooFind 提供的信息可能存在错误，包括涉及个人的信息，请注意甄别并自行核实
+    </p> -->
+
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8784624020948059"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+
+    <script type="module" src="script.js"></script>
+  </body>
+</html>

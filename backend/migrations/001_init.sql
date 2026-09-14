@@ -1,0 +1,59 @@
+CREATE TABLE IF NOT EXISTS users (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  email VARCHAR(255) NOT NULL UNIQUE,
+  password_hash VARCHAR(255) NOT NULL,
+  display_name VARCHAR(100) NOT NULL DEFAULT '用户',
+  full_name VARCHAR(100) NOT NULL DEFAULT '',
+  bio VARCHAR(500) NOT NULL DEFAULT '',
+  avatar_path VARCHAR(512) NOT NULL DEFAULT '',
+  daily_token_limit BIGINT UNSIGNED NOT NULL DEFAULT 1000000,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS token_usage (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  user_id BIGINT UNSIGNED NOT NULL,
+  prompt_tokens INT UNSIGNED NOT NULL DEFAULT 0,
+  completion_tokens INT UNSIGNED NOT NULL DEFAULT 0,
+  total_tokens INT UNSIGNED NOT NULL DEFAULT 0,
+  model VARCHAR(64) NOT NULL DEFAULT '',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  INDEX idx_user_created_at (user_id, created_at),
+  CONSTRAINT fk_token_usage_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS chat_sessions (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  user_id BIGINT UNSIGNED NOT NULL,
+  title VARCHAR(120) NOT NULL DEFAULT '新聊天',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  INDEX idx_chat_sessions_user_updated (user_id, updated_at),
+  CONSTRAINT fk_chat_sessions_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS chat_messages (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  session_id BIGINT UNSIGNED NOT NULL,
+  role ENUM('user', 'assistant') NOT NULL,
+  content MEDIUMTEXT NOT NULL,
+  reasoning_content MEDIUMTEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  INDEX idx_chat_messages_session_created (session_id, created_at),
+  CONSTRAINT fk_chat_messages_session FOREIGN KEY (session_id) REFERENCES chat_sessions(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS visit_logs (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  visit_date DATE NOT NULL,
+  visitor_key VARCHAR(128) NOT NULL,
+  user_id BIGINT UNSIGNED NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY uniq_visit_date_visitor (visit_date, visitor_key),
+  INDEX idx_visit_date (visit_date),
+  INDEX idx_visit_user_id (user_id)
+);
+
+ALTER TABLE users ADD COLUMN daily_token_limit BIGINT UNSIGNED NOT NULL DEFAULT 1000000;
+
