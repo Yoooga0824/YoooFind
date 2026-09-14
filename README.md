@@ -368,10 +368,6 @@ TAVILY_API_KEY=your_tavily_api_key
 
 当前版本已将聊天记录迁移到 MySQL，不再读取旧版 `saved-api-chats` 数据。
 
-### 为什么项目名仍包含 Gemini-Clone
-
-仓库目录沿用了原始项目名称，当前产品名称和页面品牌已经改为 YoooFind。项目保留了 Gemini 风格的交互设计，但后端使用的是 OpenAI 兼容多模型接口。
-
 ## 已知限制
 
 - 当前未提供 Docker、Docker Compose 和 CI/CD 配置
